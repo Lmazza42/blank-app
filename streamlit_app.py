@@ -31,16 +31,20 @@ if tag_choice == "truemed-eligible":
     st.markdown("""
 ```html
 <!-- Display widget only if product has 'truemed-eligible' tag -->
-<div shopify-tags="display-if-eligible" id="truemed-instructions" style="font-size: 14px;" icon-height="12" data-public-id="YOUR_PUBLIC_QUALIFICATION_ID"></div>
+{% if product.tags contains 'truemed-eligible' %}
+<div id="truemed-instructions" style="font-size: 14px;" icon-height="12" data-public-id="YOUR_PUBLIC_QUALIFICATION_ID"></div>
 <script src="https://static.truemed.com/widgets/product-page-widget.min.js" defer></script>
+{% endif %}
 ```
     """)
 else:
     st.markdown("""
 ```html
 <!-- Display widget unless product has 'truemed-ineligible' tag -->
-<div shopify-tags="display-unless-ineligible" id="truemed-instructions" style="font-size: 14px;" icon-height="12" data-public-id="YOUR_PUBLIC_QUALIFICATION_ID"></div>
+{% if product.tags contains 'truemed-ineligible' %}
+<div id="truemed-instructions" style="font-size: 14px;" icon-height="12" data-public-id="YOUR_PUBLIC_QUALIFICATION_ID"></div>
 <script src="https://static.truemed.com/widgets/product-page-widget.min.js" defer></script>
+{% endif %}
 ```
     """)
 
@@ -74,12 +78,20 @@ if uploaded_file:
         df['Status'] = df['Status'].astype(str).str.lower().str.strip()
 
         # Filter by tag choice
-        status_filter = "eligible" if tag_choice == "truemed-eligible" else "ineligible"
-        filtered_df = df[df['Status'] == status_filter]
+        if tag_choice == "truemed-eligible":
+            # Check for both approved_with_lmn and pre_approved statuses
+            filtered_df = df[df['Status'].isin(['approved_with_lmn', 'pre_approved'])]
+        else:
+            # For truemed-ineligible, check for ineligible status
+            filtered_df = df[df['Status'] == 'ineligible']
+        
         handles = filtered_df['Item Name'].dropna().unique().tolist()
 
         if not handles:
-            st.warning(f"No products with status '{status_filter}' found.")
+            if tag_choice == "truemed-eligible":
+                st.warning("No products with status 'approved_with_lmn' or 'pre_approved' found.")
+            else:
+                st.warning("No products with status 'ineligible' found.")
         else:
             # Create one line per handle
             lines = [f"{handle}, add, {tag_choice}" for handle in handles]
