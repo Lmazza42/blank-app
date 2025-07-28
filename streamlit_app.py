@@ -7,6 +7,12 @@ st.set_page_config(page_title="Truemed Tools", layout="centered")
 # Header
 st.title("Truemed Tools")
 
+# Link to Loom video
+st.markdown("""
+### 📹 How to Use This Tool
+[Watch the tutorial video](https://www.loom.com/share/f147c759c8b54ff18cb652a6becfd380?sid=7046d406-5ab6-4b86-b1b5-e09522102357)
+""")
+
 st.markdown("""
 **This tool helps you generate bulk tag updates for use with the
 [Power Tools Bulk Edit Tags](https://apps.shopify.com/power-tools-bulk-edit-tags) app. Please start by installing the app in Shopify.**
