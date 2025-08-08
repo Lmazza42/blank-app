@@ -47,10 +47,10 @@ else:
     st.markdown("""
 ```html
 <!-- Display widget unless product has 'truemed-ineligible' tag -->
-{% if product.tags contains 'truemed-ineligible' %}
+{% unless product.tags contains "truemed-ineligible" %}
 <div id="truemed-instructions" style="font-size: 14px;" icon-height="12" data-public-id="YOUR_PUBLIC_QUALIFICATION_ID"></div>
 <script src="https://static.truemed.com/widgets/product-page-widget.min.js" defer></script>
-{% endif %}
+{% endunless %}
 ```
     """)
 
